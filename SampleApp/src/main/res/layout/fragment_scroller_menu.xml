@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.appmogli.scrollermenu.sampleapp.ScrollerMenuActivity$PlaceholderFragment"
+    android:orientation="vertical">
+
+    <com.appmogli.widget.scrollermenu.ScrollerMenu
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        custom:scrollerMenuItems="@array/menu_items">
+
+    </com.appmogli.widget.scrollermenu.ScrollerMenu>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="@android:color/holo_purple"></View>
+</LinearLayout>

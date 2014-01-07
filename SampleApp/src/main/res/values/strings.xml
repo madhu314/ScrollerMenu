@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">My Module</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_scroller_menu">ScrollerMenuActivity</string>
+    <string-array name="menu_items">
+        <item>Menu-One</item>
+        <item>Menu-Two</item>
+        <item>Menu-Three</item>
+        <item>Menu-Four</item>
+        <item>Menu-Five</item>
+        <item>Menu-Six</item>
+        <item>Menu-Seven</item>
+        <item>Menu-Eight</item>
+        <item>Menu-Nine</item>
+        <item>Menu-Ten</item>
+    </string-array>
+</resources>
