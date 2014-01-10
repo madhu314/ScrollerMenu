@@ -1,11 +1,8 @@
 package com.appmogli.widget.scrollermenu;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -18,6 +15,7 @@ public class ScrollerMenuScrollView extends ScrollView {
     private TextView[] menuItems;
     private TextView selectedText;
     private int scrollHeight;
+    private int selectedChild;
 
     public ScrollerMenuScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -44,15 +42,25 @@ public class ScrollerMenuScrollView extends ScrollView {
     }
 
     @Override
+    public void scrollTo(int x, int y) {
+        super.scrollTo(x, Math.min(y, this.scrollHeight));
+    }
+
+    @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        int childToActivate = 0;
+        selectedChild = 0;
         if (t > 0) {
-            childToActivate = t / itemHeight;
+            selectedChild = t / itemHeight;
         }
-        this.selectedText.setText(menuItems[childToActivate].getText());
+        this.selectedText.setText(menuItems[selectedChild].getText());
         for (int i = 0; i < menuItems.length; i++) {
-            menuItems[i].setVisibility(i == childToActivate ? View.INVISIBLE : View.VISIBLE);
+            menuItems[i].setVisibility(i == selectedChild ? View.INVISIBLE : View.VISIBLE);
         }
     }
+
+    protected int getSelectedChild() {
+        return selectedChild;
+    }
+
 }

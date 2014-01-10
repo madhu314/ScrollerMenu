@@ -7,6 +7,7 @@
         <attr name="scrollerMenuItemTextColor" format="dimension" />
         <attr name="scrollerMenuItemDefaultBackground" format="reference" />
         <attr name="scrollerMenuItemSelectedBackground" format="reference" />
+        <attr name="scrollerMenuPanelBackground" format="reference" />
         <attr name="scrollerMenuItems" format="integer" />
     </declare-styleable>
 

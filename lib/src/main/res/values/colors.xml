@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="scroller_menu_item_text_color">#FFFFFFFF</color>
+    <color name="scroller_menu_panel_inset_color">#30000000</color>
+    <color name="scroller_menu_panel_border_color">#000000</color>
+    <color name="scroller_menu_item_default_color">#30000000</color>
+    <color name="scroller_menu_item_selected_color">#A00099CC</color>
+</resources>

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/DragAndChooseMenu.iml" filepath="$PROJECT_DIR$/DragAndChooseMenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/SampleApp/SampleApp.iml" filepath="$PROJECT_DIR$/SampleApp/SampleApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/ScrollerMenu.iml" filepath="$PROJECT_DIR$/ScrollerMenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
