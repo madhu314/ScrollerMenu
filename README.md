@@ -58,12 +58,12 @@ yourScrollerMenuInstance.setMenuListener(..)
 `````
 
 ###Customization
-1. scrollerMenuItemHeight: Customize height of the menu item
-2. scrollerMenuItemWidth: Customize width of the menu item
-3. scrollerMenuItemTextColor: Menu item text color
-4. scrollerMenuItemDefaultBackground: Default background to be used for non selected menu item
-5. scrollerMenuItemSelectedBackground: Background for a selected menu item
-6. scrollerMenuPanelBackground: Background for the panel that holds set of menu items
+1. scrollerMenuItemHeight: height of the menu item
+2. scrollerMenuItemWidth: width of the menu item
+3. scrollerMenuItemTextColor: menu item text color
+4. scrollerMenuItemDefaultBackground: default background to be used for non selected menu item
+5. scrollerMenuItemSelectedBackground: background for a selected menu item
+6. scrollerMenuPanelBackground: background for the panel that holds set of menu items
 
 
 Check out included sample for a detailed code level understanding
