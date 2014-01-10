@@ -11,12 +11,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.InflateException;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Scroller;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -27,9 +27,15 @@ import java.util.Arrays;
  */
 public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGestureListener {
 
+    private static final boolean DEBUG = false;
     private static final String TAG = ScrollerMenu.class.getSimpleName();
 
     private ScrollerMenuListener menuListener;
+
+    private static final int MODE_NONE = 0;
+    private static final int MODE_MENU_SCROLLING = 1;
+    private static final int MODE_MENU_VALUE_PROGRESSING = 2;
+    private int menuItemSelectedIndex = 0;
 
     public static interface ScrollerMenuListener {
 
@@ -42,9 +48,11 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
         /**
          * @param menuItems
          * @param index
-         * @param progress
+         * @param progressedBy
          */
-        public void onMenuItemProgress(String[] menuItems, int index, int progress);
+        public void onMenuItemProgressed(String[] menuItems, int index, int progressedBy);
+
+
     }
 
     private static final int MENU_ITEM_WIDTH_IN_DP = 120;
@@ -63,7 +71,7 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
     private LinearLayout menuPanel;
     private GestureDetector gestureDetector = null;
     private TextView selectedMenu;
-    private boolean isMenuScrolling;
+    private int mode;
 
     private Handler handler = new Handler();
 
@@ -97,13 +105,12 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
             menuItemHeight = a.getDimension(R.styleable.ScrollerMenu_scrollerMenuItemHeight, MENU_ITEM_HEIGHT_IN_DP);
             menuItemTextColor = a.getColor(R.styleable.ScrollerMenu_scrollerMenuItemTextColor, context.getResources().getColor(R.color.scroller_menu_item_text_color));
             CharSequence[] menuArray = (CharSequence[]) a.getTextArray(R.styleable.ScrollerMenu_scrollerMenuItems);
-            if (menuArray == null || menuArray.length < 2) {
-                throw new RuntimeException("Inflate failed, there should be at least 2 menu items");
-            }
-            menuItems = new String[menuArray.length];
-            int i = 0;
-            for (CharSequence ch : menuArray) {
-                menuItems[i++] = ch.toString();
+            if (menuArray != null && menuArray.length > 2) {
+                menuItems = new String[menuArray.length];
+                int i = 0;
+                for (CharSequence ch : menuArray) {
+                    menuItems[i++] = ch.toString();
+                }
             }
 
         } finally {
@@ -163,15 +170,22 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (isMenuScrolling) {
+            if (isMenuScroling()) {
                 notifyMenuItemSelected();
-            } else {
-                notifyMenuItemProgressed();
             }
+            mode = MODE_NONE;
             hidePanel();
             return false;
         }
         return gestureDetector.onTouchEvent(event);
+    }
+
+    private boolean isMenuValueProgressing() {
+        return mode == MODE_MENU_VALUE_PROGRESSING;
+    }
+
+    private boolean isMenuScroling() {
+        return mode == MODE_MENU_SCROLLING;
     }
 
     private void hidePanel() {
@@ -184,18 +198,31 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
         selectedMenu.setVisibility(View.VISIBLE);
     }
 
-    private void notifyMenuItemProgressed() {
+    private void notifyMenuItemProgressed(final int progress) {
+        if (DEBUG) {
+            Log.d(TAG, "Progress changed by:" + progress + " for menu item:" + menuItems[menuItemSelectedIndex]);
 
-    }
-
-    private void notifyMenuItemSelected() {
-        final int index = scrollView.getSelectedChild();
-        Log.d(TAG, "Menu item selected is:" + this.menuItems[index]);
-        if(this.menuListener != null) {
+        }
+        if (this.menuListener != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    ScrollerMenu.this.menuListener.onMenuItemSelected(menuItems, index);
+                    ScrollerMenu.this.menuListener.onMenuItemProgressed(menuItems, menuItemSelectedIndex, progress);
+                }
+            });
+        }
+    }
+
+    private void notifyMenuItemSelected() {
+        menuItemSelectedIndex = scrollView.getSelectedChild();
+        if (DEBUG) {
+            Log.d(TAG, "Menu item selected is:" + this.menuItems[menuItemSelectedIndex]);
+        }
+        if (this.menuListener != null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ScrollerMenu.this.menuListener.onMenuItemSelected(menuItems, menuItemSelectedIndex);
                 }
             });
         }
@@ -204,6 +231,11 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+
+        if(menuItems == null || menuItems.length < 2) {
+            Log.e(TAG, "Menu items are not provided");
+            return;
+        }
 
         int viewWidth = w;
         int viewHeight = h;
@@ -317,19 +349,30 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
 
     @Override
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float scrollX, float scrollY) {
-        if (Math.abs(scrollX) > Math.abs(scrollY)) {
-            //show selected category
+        if (isModeNone()) {
+            if (Math.abs(scrollX) > Math.abs(scrollY)) {
+                mode = MODE_MENU_VALUE_PROGRESSING;
+            } else {
+                mode = MODE_MENU_SCROLLING;
+            }
+        }
+        if (isMenuValueProgressing()) {
             hidePanel();
-            isMenuScrolling = false;
-
+            int halfWidthOfView = getWidth() / 2;
+            float effectiveDistance = -scrollX * 100f / halfWidthOfView;
+            final int progress = Math.round(effectiveDistance);
+            notifyMenuItemProgressed(progress);
         } else {
             //scroll menu
-            isMenuScrolling = true;
             showPanel();
             scrollView.smoothScrollBy((int) scrollX, (int) scrollY);
         }
 
         return true;
+    }
+
+    private boolean isModeNone() {
+        return mode == MODE_NONE;
     }
 
     @Override
@@ -344,5 +387,21 @@ public class ScrollerMenu extends RelativeLayout implements GestureDetector.OnGe
 
     public void setMenuListener(ScrollerMenuListener listener) {
         this.menuListener = listener;
+    }
+
+    public void setSelectedMenuItem(int selectedMenuItem) {
+        this.menuItemSelectedIndex = selectedMenuItem;
+    }
+
+    /**
+     * @return index of the menu item which is selected
+     */
+    public int getSelectedMenuItem() {
+        return this.menuItemSelectedIndex;
+    }
+
+    @Override
+    public boolean isInEditMode() {
+        return false;
     }
 }

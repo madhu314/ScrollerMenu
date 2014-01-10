@@ -15,7 +15,7 @@ public class ScrollerMenuScrollView extends ScrollView {
     private TextView[] menuItems;
     private TextView selectedText;
     private int scrollHeight;
-    private int selectedChild;
+    private int selectedChild = 0;
 
     public ScrollerMenuScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -63,4 +63,8 @@ public class ScrollerMenuScrollView extends ScrollView {
         return selectedChild;
     }
 
+    @Override
+    public boolean isInEditMode() {
+        return false;
+    }
 }

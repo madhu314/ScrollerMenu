@@ -1,4 +1,4 @@
-package com.appmogli.scrollermenu.sampleapp;
+package com.appmogli.widget.scrollermenu.sampleapp;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.appmogli.widget.scrollermenu.sampleapp.R;
+
+
 public class ScrollerMenuActivity extends ActionBarActivity {
 
     @Override
@@ -18,7 +21,7 @@ public class ScrollerMenuActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new ImageHolderFragment())
                     .commit();
         }
     }
@@ -44,20 +47,5 @@ public class ScrollerMenuActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_scroller_menu, container, false);
-            return rootView;
-        }
-    }
 
 }
