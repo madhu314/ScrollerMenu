@@ -1,4 +1,5 @@
 Scroller Menu is an implementation of [snapseed](https://play.google.com/store/apps/details?id=com.niksoftware.snapseed) style menu chooser
+
 1. Scroll vertically to choose a menu option
 2. Scroll left/right to decrement/increment selected menu option value
 
