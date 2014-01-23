@@ -3,6 +3,8 @@ Scroller Menu is an implementation of [snapseed](https://play.google.com/store/a
 1. Scroll vertically to choose a menu option
 2. Scroll left/right to decrement/increment selected menu option value
 
+See [demo](http://youtu.be/b343A_jnh04) 
+
 ###Usage
 Wrap your view below the scroller menu in a frame layout. In the below example, I am placing scroller menu on top of my image view
 `````
