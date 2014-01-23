@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/colosseum"
+            android:src="@drawable/sample_image"
             android:adjustViewBounds="true" />
 
         <com.appmogli.widget.scrollermenu.ScrollerMenu
